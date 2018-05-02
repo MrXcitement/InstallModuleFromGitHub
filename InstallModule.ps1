@@ -1,15 +1,22 @@
-$ModuleName   = "InstallModuleFromGitHub"
-$ModulePath   = "C:\Program Files\WindowsPowerShell\Modules"
-$TargetPath = "$($ModulePath)\$($ModuleName)"
+param([string]$Scope = "AllUsers")
 
-if(!(Test-Path $TargetPath)) { md $TargetPath | out-null}
+$ModuleName   = "InstallModuleFromGitHub"
+$AllUsersPath   = "$env:ProgramFiles\WindowsPowerShell\Modules"
+$CurrentUserPath = "$env:USERPROFILE\Documents\WindowsPowershell\Modules"
+$ScopePaths = @{
+    AllUsers = "$AllUsersPath\$ModuleName"
+    CurrentUser = "$CurrentUserPath\$ModuleName"
+}
+$TargetPath = $ScopePaths["$Scope"]
+
+if(!(Test-Path $TargetPath)) {
+    md $TargetPath | out-null
+}
 
 $targetFiles = echo `
     *.psm1 `
     *.psd1 `
     License.txt `
-
-
 
 ls $targetFiles |
     ForEach {
