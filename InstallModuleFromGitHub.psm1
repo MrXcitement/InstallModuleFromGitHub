@@ -45,7 +45,7 @@ function Install-ModuleFromGitHub {
                 Expand-Archive -Path $OutFile -DestinationPath $tmpDir -Force
 
                 $unzippedArchive = "$($targetModuleName)-$($Branch)"
-                Write-Debug "targetModule: $targetModule"
+                Write-Debug "unzippedArchive: $unzippedArchive"
 
                 if ($IsLinux -or $IsOSX) {
                   $dest = Join-Path -Path $HOME -ChildPath ".local/share/powershell/Modules"
@@ -68,7 +68,14 @@ function Install-ModuleFromGitHub {
                     $dest = Join-Path -Path $dest -ChildPath $ModuleVersion
                 }
 
-                $null = Copy-Item "$(Join-Path -Path $tmpDir -ChildPath $unzippedArchive)/*" $dest -Force
+                $src = $(Join-Path -Path $tmpDir -ChildPath $unzippedArchive)
+                Write-Debug "src: $src"
+
+                
+                if(!(Test-Path $dest)) {
+                    mkdir $dest | out-null
+                }
+                $null = Copy-Item "$src/*" $dest -Force
         }
     }
 }
