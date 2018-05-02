@@ -32,6 +32,7 @@ function Install-ModuleFromGitHub {
                 Write-Debug "OutFile: $OutFile"
 
 
+                [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11"
                 if ($IsLinux -or $IsOSX) {
                   Invoke-RestMethod $url -OutFile $OutFile
                 }
